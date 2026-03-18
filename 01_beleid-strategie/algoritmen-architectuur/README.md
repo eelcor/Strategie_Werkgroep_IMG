@@ -12,7 +12,7 @@
 
 | Gemeente | Document | Datum | Status |
 |---|---|---|---|
-| Rotterdam | [Architectuurschets AI-platform](./gemeente-rotterdam/) | Feb 2025 | Gepubliceerd |
+|   |  |  |  |
 
 ## Werkgroepproducten (gepland Q2 2026)
 
