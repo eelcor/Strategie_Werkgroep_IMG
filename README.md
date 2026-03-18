@@ -4,7 +4,8 @@ Welkom op de gedeelde kennisomgeving van de VNG Werkgroep AI Strategie.
 
 Deze repository vormt de digitale kapstok voor het verzamelen, delen en duiden van kennis rondom verantwoorde AI-inzet bij gemeenten. De structuur is gebaseerd op het Novius-model en de werkwijze van de werkgroep.
 
-<img width="2006" height="1244" alt="image" src="https://github.com/user-attachments/assets/3fd066be-857c-4fab-ace3-8ae96ba68a4c" />
+<img width="2006" height="1244" alt="image" src="https://github.com/user-attachments/assets/e86368ea-9da3-45af-9fc8-3c477dc36df0" />
+ 
  
 
 ---
