@@ -64,8 +64,7 @@ vng-ai-kapstok/
 
 ## Deelnemers werkgroep
 
-Jan, Simone, Ron, Natalyia, Maxim, Hans, Cor, Arjan, Frans  
-Coördinatie: Frans
+Eelco, Frans, Jan, Simone, Ron, Natalyia, Maxim, Hans, Cor, Arjan  
 
 ---
 
@@ -73,11 +72,11 @@ Coördinatie: Frans
 
 | Product | Streven |
 |---|---|
-| Algoritmen & AI Referentie architectuur | Q2 2026 |
-| Aansluitvoorwaarden AI-aanbieders | Q2 2026 |
-| Transitie architectuur | Q2 2026 |
-| Marktverkenning leveranciers | Q3-Q4 2026 |
-| Opname in GEMMA en softwarecatalogus | Q1 2027 |
+| NTB | Q2 2026 |
+| NTB | Q2 2026 |
+| NTB | Q2 2026 |
+| NTB | Q3-Q4 2026 |
+| NTB | Q1 2027 |
 
 ---
 
