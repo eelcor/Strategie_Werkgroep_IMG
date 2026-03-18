@@ -64,7 +64,7 @@ vng-ai-kapstok/
 
 ## Deelnemers werkgroep
 
-Eelco, Frans, Jan, Simone, Ron, Natalyia, Maxim, Hans, Cor, Arjan  
+Eelco, Frans, Maxim, Cindy, Hans, Joost, Jeroen, Marguarita, Sanne, Niels, Koen  
 
 ---
 
