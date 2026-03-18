@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VNG Werkgroep AI Strategie — Kapstok</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gray-50: #F1EFE8; --gray-100: #D3D1C7; --gray-400: #888780; --gray-600: #5F5E5A; --gray-800: #444441; --gray-900: #2C2C2A;
+    --blue-50: #E6F1FB; --blue-100: #B5D4F4; --blue-200: #85B7EB; --blue-600: #185FA5; --blue-800: #0C447C;
+    --teal-50: #E1F5EE; --teal-600: #0F6E56; --teal-400: #1D9E75;
+    --amber-50: #FAEEDA; --amber-400: #BA7517; --amber-100: #FAC775;
+    --green-800: #27500A; --green-600: #3B6D11; --green-900: #2C5F2D; --green-50: #EAF3DE;
+    --purple-600: #534AB7; --purple-50: #EEEDFE;
+    --coral-600: #993C1D; --coral-50: #FAECE7;
+    --border: rgba(0,0,0,.1);
+    --radius: 8px; --radius-lg: 10px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  body { font-family: var(--font); background: #f5f4f0; color: #1a1a1a; font-size: 14px; line-height: 1.5; }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    background: var(--gray-800); color: #fff;
+    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  .page-header h1 { font-size: 15px; font-weight: 500; }
+  .page-header nav { display: flex; gap: 12px; font-size: 12px; }
+  .page-header nav a { color: rgba(255,255,255,.75); text-decoration: none; }
+  .page-header nav a:hover { color: #fff; }
+
+  /* ── KAPSTOK CONTAINER ── */
+  .kapstok { max-width: 1040px; margin: 20px auto; padding: 0 16px 40px; }
+
+  /* ── EXTERNE INVLOEDEN ── */
+  .extern-block { border: 1.5px solid var(--gray-600); border-radius: var(--radius-lg) var(--radius-lg) 0 0; overflow: hidden; }
+  .extern-header { background: var(--gray-800); color: #fff; padding: 8px 14px; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
+  .extern-cols { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); background: var(--gray-50); border-top: 1px solid var(--gray-100); }
+  .extern-col { padding: 10px 12px 12px; cursor: pointer; border-right: 1px solid var(--gray-100); transition: background .15s; position: relative; }
+  .extern-col:last-child { border-right: none; }
+  .extern-col:hover { background: #e5e2da; }
+  .extern-col.active { background: #fff; border-bottom: 3px solid var(--gray-800); }
+  .extern-col .col-title { font-size: 11px; font-weight: 600; color: var(--gray-900); line-height: 1.4; margin-bottom: 3px; }
+  .extern-col .col-desc { font-size: 10px; color: var(--gray-600); line-height: 1.4; }
+  .e-dot { width: 7px; height: 7px; border-radius: 50%; position: absolute; top: 8px; right: 8px; }
+  .extern-content { background: #fff; border-top: 1px solid var(--gray-100); padding: 12px 16px; border: 1.5px solid var(--gray-600); border-top: none; }
+
+  /* ── VOEDINGSPIJL ── */
+  .feed-arrow { text-align: center; padding: 4px 0; font-size: 11px; color: #aaa; display: flex; align-items: center; justify-content: center; gap: 8px; user-select: none; }
+  .feed-arrow::before, .feed-arrow::after { content: ''; flex: 1; height: 1px; background: var(--gray-100); }
+
+  /* ── BELEID & STRATEGIE ── */
+  .strategie-block { border: 1.5px solid var(--blue-600); overflow: hidden; }
+  .strategie-header { background: var(--blue-600); color: #fff; padding: 8px 14px; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; }
+  .strategie-themas { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); background: var(--blue-50); border-top: 1px solid var(--blue-100); }
+  .thema-col { padding: 10px 8px 12px; cursor: pointer; border-right: 1px solid var(--blue-100); transition: background .15s; position: relative; }
+  .thema-col:last-child { border-right: none; }
+  .thema-col:hover { background: #c8dff5; }
+  .thema-col.active { background: #fff; border-bottom: 3px solid var(--blue-600); }
+  .thema-col .thema-title { font-size: 11px; font-weight: 600; color: var(--blue-800); line-height: 1.4; margin-bottom: 3px; }
+  .thema-col .thema-desc { font-size: 10px; color: #378ADD; line-height: 1.4; }
+  .t-dot { width: 7px; height: 7px; border-radius: 50%; position: absolute; top: 8px; right: 8px; }
+  .strategie-content { background: #fff; border-top: 1px solid var(--blue-100); padding: 12px 16px; border: 1.5px solid var(--blue-600); border-top: none; }
+
+  /* ── MIDDENLAGEN ── */
+  .laag { border: 1px solid var(--border); border-top: none; }
+  .laag-header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; user-select: none; }
+  .laag:hover .laag-header { filter: brightness(.97); }
+  .laag.open .laag-header { filter: brightness(.94); }
+  .laag-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+  .laag-name { font-size: 13px; font-weight: 600; flex: 1; }
+  .laag-meta { font-size: 11px; opacity: .65; }
+  .laag-arrow { font-size: 11px; color: #aaa; transition: transform .2s; flex-shrink: 0; }
+  .laag.open .laag-arrow { transform: rotate(90deg); }
+  .laag-content { display: none; padding: 0 16px 14px; background: #fff; border-top: 1px solid var(--border); }
+  .laag.open .laag-content { display: block; }
+  .laag-mo .laag-header { background: #f0faf6; } .laag-mo { border-left: 3px solid var(--teal-400); }
+  .laag-ps .laag-header { background: #faf7f0; } .laag-ps { border-left: 3px solid var(--amber-400); }
+  .laag-tech .laag-header { background: #f3f1fd; } .laag-tech { border-left: 3px solid var(--purple-600); }
+  .laag-data .laag-header { background: #fdf3f0; } .laag-data { border-left: 3px solid var(--coral-600); }
+
+  /* ── TRANSFORMATIE ── */
+  .trans-bar { background: var(--green-900); padding: 10px 14px; border: 1px solid var(--green-900); border-top: none; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+  .trans-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .trans-title { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; }
+  .trans-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .trans-chip { font-size: 11px; padding: 5px 12px; border-radius: 6px; background: rgba(255,255,255,.15); color: #fff; cursor: pointer; border: 1px solid rgba(255,255,255,.25); transition: all .15s; display: flex; align-items: center; gap: 5px; }
+  .trans-chip:hover { background: rgba(255,255,255,.28); }
+  .trans-chip.active { background: #fff; color: var(--green-900); font-weight: 600; }
+  .trans-chip .ca { font-size: 9px; opacity: .7; transition: transform .2s; }
+  .trans-chip.active .ca { transform: rotate(90deg); opacity: 1; }
+  .trans-panel { display: none; margin-top: 10px; background: #fff; border-radius: 8px; overflow: hidden; }
+  .trans-panel.active { display: block; }
+  .trans-panel-header { padding: 9px 14px; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .trans-panel-body { padding: 10px 16px 14px; }
+
+  /* ── SHARED CONTENT ── */
+  .beschouwing { margin: 8px 0 10px; padding: 9px 12px; background: #fef9f0; border-left: 3px solid var(--amber-400); border-radius: 0 6px 6px 0; font-size: 12px; color: #444; line-height: 1.6; }
+  .beschouwing-label { font-size: 10px; font-weight: 700; color: var(--amber-400); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
+  .extern-beschouwing { border-left-color: var(--gray-400); background: #f8f7f4; }
+  .extern-beschouwing .beschouwing-label { color: var(--gray-600); }
+
+  .doc-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0ece8; font-size: 12px; }
+  .doc-item:last-child { border-bottom: none; }
+  .doc-icon { font-size: 15px; flex-shrink: 0; }
+  .doc-name { flex: 1; color: #333; }
+  .doc-item a { color: var(--blue-600); text-decoration: none; }
+  .doc-item a:hover { text-decoration: underline; }
+  .doc-meta { font-size: 10px; color: #aaa; flex-shrink: 0; }
+  .bijdrage { display: flex; align-items: flex-start; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f0ece8; font-size: 12px; }
+  .bijdrage:last-child { border-bottom: none; }
+  .gem-badge { flex-shrink: 0; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 99px; background: var(--blue-50); color: var(--blue-800); }
+  .bijdrage-text { flex: 1; color: #333; line-height: 1.5; }
+  .tag-pub { font-size: 10px; padding: 1px 6px; border-radius: 99px; background: var(--teal-50); color: var(--teal-600); flex-shrink: 0; font-weight: 500; }
+  .tag-draft { font-size: 10px; padding: 1px 6px; border-radius: 99px; background: var(--amber-50); color: var(--amber-400); flex-shrink: 0; font-weight: 500; }
+  .empty { font-size: 12px; color: #bbb; padding: 16px 0; text-align: center; }
+
+  .roadmap-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 6px; }
+  .roadmap-table th { text-align: left; font-size: 10px; font-weight: 700; color: #888; padding: 4px 8px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .4px; }
+  .roadmap-table td { padding: 7px 8px; border-bottom: 1px solid #f5f4f0; vertical-align: middle; }
+  .roadmap-table tr:last-child td { border-bottom: none; }
+  .roadmap-table a { color: var(--blue-600); text-decoration: none; font-size: 11px; }
+  .roadmap-table a:hover { text-decoration: underline; }
+  .level-bar { height: 6px; border-radius: 3px; background: #e8f5ee; width: 80px; }
+  .level-fill { height: 100%; border-radius: 3px; background: var(--teal-400); }
+  .fase-chip { font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 500; }
+
+  .add-btn { display: block; width: 100%; margin-top: 10px; padding: 8px 12px; border-radius: 6px; border: 1px dashed #ccc; background: transparent; font-size: 11px; color: #888; cursor: pointer; text-align: center; transition: all .15s; text-decoration: none; }
+  .add-btn:hover { background: #f5f4f0; color: #444; border-color: #aaa; }
+
+  /* ── LEGEND ── */
+  .legend { display: flex; gap: 16px; margin-top: 12px; font-size: 11px; color: #888; flex-wrap: wrap; }
+  .leg { display: flex; align-items: center; gap: 5px; }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  @media (max-width: 640px) {
+    .strategie-themas { grid-template-columns: repeat(2, 1fr); }
+    .extern-cols { grid-template-columns: 1fr; }
+    .trans-chips { flex-direction: column; }
+    .laag-meta { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>VNG Werkgroep AI Strategie — Kapstok</h1>
+  <nav>
+    <a href="https://github.com/eelcor/Strategie_Werkgroep_IMG" target="_blank">GitHub</a>
+    <a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/CONTRIBUTING.md" target="_blank">Bijdrage leveren</a>
+    <a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/issues/new" target="_blank">Vraag of melding</a>
+  </nav>
+</header>
+
+<div class="kapstok">
+
+  <!-- ① EXTERNE INVLOEDEN -->
+  <div class="extern-block">
+    <div class="extern-header">
+      <span>Externe invloeden</span>
+      <span style="font-size:10px;opacity:.75">Voedt de strategie — klik een kolom voor documenten</span>
+    </div>
+    <div class="extern-cols">
+      <div class="extern-col active" onclick="selectExtern(0,this)">
+        <div class="e-dot" style="background:var(--teal-400)"></div>
+        <div class="col-title">Maatschappelijke ontwikkelingen</div>
+        <div class="col-desc">Publiek debat, onderzoek, burgervertrouwen</div>
+      </div>
+      <div class="extern-col" onclick="selectExtern(1,this)">
+        <div class="e-dot" style="background:var(--teal-400)"></div>
+        <div class="col-title">Overheid &amp; wetgeving</div>
+        <div class="col-desc">NDS, coalitieakkoord, AI-act, BZK</div>
+      </div>
+      <div class="extern-col" onclick="selectExtern(2,this)">
+        <div class="e-dot" style="background:#ccc"></div>
+        <div class="col-title">Ontwikkelingen binnen VNG</div>
+        <div class="col-desc">Resoluties, GEMMA, werkgroepen</div>
+      </div>
+    </div>
+    <div class="extern-content" id="extern-content"></div>
+  </div>
+
+  <div class="feed-arrow">voedt ↓ strategie &amp; beleid</div>
+
+  <!-- ② BELEID & STRATEGIE -->
+  <div class="strategie-block">
+    <div class="strategie-header">
+      <span>Beleid &amp; Strategie</span>
+      <span style="font-size:10px;opacity:.8">Klik een thema voor bijdragen en beschouwing</span>
+    </div>
+    <div class="strategie-themas">
+      <div class="thema-col active" onclick="selectThema(0,this)">
+        <div class="t-dot" style="background:var(--teal-400)"></div>
+        <div class="thema-title">Governance &amp; Vangrails AI-act</div>
+        <div class="thema-desc">Veilige algoritmen, implementatie</div>
+      </div>
+      <div class="thema-col" onclick="selectThema(1,this)">
+        <div class="t-dot" style="background:#ccc"></div>
+        <div class="thema-title">Richtlijnen gebruik GenAI</div>
+        <div class="thema-desc">Beleid generatieve AI</div>
+      </div>
+      <div class="thema-col" onclick="selectThema(2,this)">
+        <div class="t-dot" style="background:var(--teal-400)"></div>
+        <div class="thema-title">Algoritmen &amp; AI Architectuur</div>
+        <div class="thema-desc">Referentiearchitectuur, GEMMA</div>
+      </div>
+      <div class="thema-col" onclick="selectThema(3,this)">
+        <div class="t-dot" style="background:#ccc"></div>
+        <div class="thema-title">Digitale soevereiniteit &amp; autonomie</div>
+        <div class="thema-desc">Big tech vs. eigen regie</div>
+      </div>
+      <div class="thema-col" onclick="selectThema(4,this)">
+        <div class="t-dot" style="background:#ccc"></div>
+        <div class="thema-title">Overige gemeentelijke kaders</div>
+        <div class="thema-desc">AVG, ethiek, inkoop</div>
+      </div>
+    </div>
+    <div class="strategie-content" id="strat-content"></div>
+  </div>
+
+  <!-- ③ MENS EN ORGANISATIE -->
+  <div class="laag laag-mo" id="laag-mo">
+    <div class="laag-header" onclick="toggleLaag('mo')">
+      <div class="laag-icon">👥</div>
+      <div class="laag-name">Mens en organisatie</div>
+      <div class="laag-meta">Nieuwe rollen · SPP · Transformatie</div>
+      <div class="laag-arrow">▶</div>
+    </div>
+    <div class="laag-content">
+      <div class="beschouwing"><div class="beschouwing-label">Werkgroep beschouwing</div>De grootste uitdaging bij AI-inzet zit niet in technologie maar in mensen. Gemeenten missen concrete handvatten voor de strategische personeelsplanning en weten vaak niet welke functies zij moeten creëren of aanpassen.</div>
+      <div class="bijdrage"><span class="gem-badge">Utrecht</span><div class="bijdrage-text">Functieprofiel AI-coördinator opgesteld. Combinatie beleidskennis + technisch inzicht is essentieel.</div><a class="tag-pub" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/02_uitvoering/mens-organisatie/gemeente-utrecht" target="_blank" target="_blank">Gepubliceerd ↗</a></div>
+      <div class="bijdrage"><span class="gem-badge">Leiden</span><div class="bijdrage-text">AI-bewustzijnstraining MT afgerond. 60% voelt zich onvoldoende toegerust voor AI-besluitvorming.</div><span class="tag-draft">Concept</span></div>
+      <a class="add-btn" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/02_uitvoering/mens-organisatie" target="_blank" target="_blank">+ Bijdrage leveren als gemeente — naar GitHub ↗</a>
+    </div>
+  </div>
+
+  <!-- ④ PROCES EN STRUCTUUR -->
+  <div class="laag laag-ps" id="laag-ps">
+    <div class="laag-header" onclick="toggleLaag('ps')">
+      <div class="laag-icon">⚙️</div>
+      <div class="laag-name">Proces en structuur</div>
+      <div class="laag-meta">Ontwikkelproces algoritmen &amp; AI multidisciplinair · Kwaliteitstraat 2.0</div>
+      <div class="laag-arrow">▶</div>
+    </div>
+    <div class="laag-content">
+      <div class="beschouwing"><div class="beschouwing-label">Werkgroep beschouwing</div>Het multidisciplinaire ontwikkelproces is de kern van verantwoorde AI-inzet. Business case, privacytoets, architectuurtoets en ethische toets moeten vroeg in het proces plaatsvinden.</div>
+      <div class="empty">Nog geen bijdragen — wees de eerste gemeente</div>
+      <a class="add-btn" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/02_uitvoering/proces-structuur" target="_blank" target="_blank">+ Eerste bijdrage leveren — naar GitHub ↗</a>
+    </div>
+  </div>
+
+  <!-- ⑤ TECHNOLOGIE -->
+  <div class="laag laag-tech" id="laag-tech">
+    <div class="laag-header" onclick="toggleLaag('tech')">
+      <div class="laag-icon">💻</div>
+      <div class="laag-name">Technologie</div>
+      <div class="laag-meta">AI-technologie productlijnen big tech én digitaal soeverein</div>
+      <div class="laag-arrow">▶</div>
+    </div>
+    <div class="laag-content">
+      <div class="beschouwing"><div class="beschouwing-label">Werkgroep beschouwing</div>Marktverkenning met leveranciers gepland voor Q3-Q4 2026. Doel: inzicht in welke producten aansluiten op de architectuurbouwblokken, zowel big tech als soevereine alternatieven.</div>
+      <div class="bijdrage"><span class="gem-badge">Rotterdam</span><div class="bijdrage-text">Architectuurschets AI-platform op Kubernetes + MLflow bijgevoegd.</div><a class="tag-pub" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/02_uitvoering/technologie/gemeente-rotterdam" target="_blank" target="_blank">Gepubliceerd ↗</a></div>
+      <a class="add-btn" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/02_uitvoering/technologie" target="_blank" target="_blank">+ Bijdrage leveren als gemeente — naar GitHub ↗</a>
+    </div>
+  </div>
+
+  <!-- ⑥ DATA -->
+  <div class="laag laag-data" id="laag-data">
+    <div class="laag-header" onclick="toggleLaag('data')">
+      <div class="laag-icon">🗄️</div>
+      <div class="laag-name">Data</div>
+      <div class="laag-meta">Databeheer, kwaliteit &amp; soevereiniteit</div>
+      <div class="laag-arrow">▶</div>
+    </div>
+    <div class="laag-content">
+      <div class="beschouwing"><div class="beschouwing-label">Werkgroep beschouwing</div>Datakwaliteit en datagovernance zijn absolute randvoorwaarden voor iedere AI-toepassing. Gemeenten worstelen met versnipperde datasilo's en onduidelijke eigenaarschapsstructuren.</div>
+      <div class="empty">Nog geen bijdragen — wees de eerste gemeente</div>
+      <a class="add-btn" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/02_uitvoering/data" target="_blank" target="_blank">+ Eerste bijdrage leveren — naar GitHub ↗</a>
+    </div>
+  </div>
+
+  <!-- ⑦ TRANSFORMATIE -->
+  <div class="trans-bar">
+    <div class="trans-top">
+      <div class="trans-title">⚡ Besturen verandering / AI transformatie</div>
+      <div class="trans-chips">
+        <div class="trans-chip" id="chip-org" onclick="toggleTrans('org')">Organisatieverandering programmatisch <span class="ca">▶</span></div>
+        <div class="trans-chip" id="chip-port" onclick="toggleTrans('port')">AI-trajecten portfolio <span class="ca">▶</span></div>
+        <div class="trans-chip" id="chip-road" onclick="toggleTrans('road')">Volwassenheid / roadmap <span class="ca">▶</span></div>
+        <div class="trans-chip" id="chip-spp" onclick="toggleTrans('spp')">Strategische personeelsplanning <span class="ca">▶</span></div>
+      </div>
+    </div>
+
+    <div class="trans-panel" id="panel-org">
+      <div class="trans-panel-header"><span>Organisatieverandering — programmatische aanpak</span><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/organisatieverandering" target="_blank" target="_blank" style="font-size:11px;color:var(--blue-600)">Alle documenten op GitHub ↗</a></div>
+      <div class="trans-panel-body">
+        <div class="beschouwing" style="margin-top:0"><div class="beschouwing-label">Werkgroep beschouwing</div>AI-transformatie is geen IT-project maar een organisatieprogramma. Gedragsverandering en nieuwe mandaten moeten parallel lopen aan technische implementatie.</div>
+        <div class="doc-item"><div class="doc-icon">📋</div><a class="doc-name" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/organisatieverandering/handreiking-programmatische-ai-transformatie-v1.2.pdf" target="_blank" target="_blank">Handreiking programmatische AI-transformatie v1.2</a><div class="doc-meta">Feb 2025</div><span class="tag-pub">Gepubliceerd</span></div>
+        <div class="doc-item"><div class="doc-icon">📋</div><a class="doc-name" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/organisatieverandering/template-inrichtingsvoorstel-ai-stuurgroep.docx" target="_blank" target="_blank">Template inrichtingsvoorstel AI-stuurgroep</a><div class="doc-meta">Jan 2025</div><span class="tag-pub">Gepubliceerd</span></div>
+        <a class="add-btn" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/organisatieverandering" target="_blank" target="_blank">+ Document of ervaring toevoegen op GitHub ↗</a>
+      </div>
+    </div>
+
+    <div class="trans-panel" id="panel-port">
+      <div class="trans-panel-header"><span>AI-trajecten in het digitaliseringsportfolio</span><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/ai-trajecten-portfolio" target="_blank" target="_blank" style="font-size:11px;color:var(--blue-600)">Alle documenten op GitHub ↗</a></div>
+      <div class="trans-panel-body">
+        <div class="beschouwing" style="margin-top:0"><div class="beschouwing-label">Werkgroep beschouwing</div>AI-trajecten moeten integraal deel uitmaken van het gemeentelijke digitaliseringsportfolio — gewogen naast andere initiatieven op impact en haalbaarheid.</div>
+        <div class="doc-item"><div class="doc-icon">📊</div><a class="doc-name" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/ai-trajecten-portfolio/portfolio-sjabloon-ai-trajecten.xlsx" target="_blank" target="_blank">Portfolio-sjabloon AI-trajecten voor gemeenten</a><div class="doc-meta">Dec 2024</div><span class="tag-pub">Gepubliceerd</span></div>
+        <div class="doc-item"><div class="doc-icon">📄</div><a class="doc-name" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/ai-trajecten-portfolio/wegingsmodel-ai-initiatieven.pdf" target="_blank" target="_blank">Wegingsmodel AI-initiatieven — impact vs. haalbaarheid</a><div class="doc-meta">Feb 2025</div><span class="tag-draft">Concept</span></div>
+        <a class="add-btn" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/ai-trajecten-portfolio" target="_blank" target="_blank">+ Document toevoegen op GitHub ↗</a>
+      </div>
+    </div>
+
+    <div class="trans-panel" id="panel-road">
+      <div class="trans-panel-header"><span>Volwassenheid / roadmap</span><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/volwassenheid-roadmap" target="_blank" target="_blank" style="font-size:11px;color:var(--blue-600)">Alle roadmaps op GitHub ↗</a></div>
+      <div class="trans-panel-body">
+        <div class="beschouwing" style="margin-top:0"><div class="beschouwing-label">Werkgroep beschouwing</div>De volwassenheidsscan geeft inzicht in waar een gemeente staat op vijf dimensies. De roadmap vertaalt de uitkomst naar concrete stappen voor 1–3 jaar. Deel uw scan en roadmap zodat gemeenten van elkaar kunnen leren.</div>
+        <table class="roadmap-table">
+          <tr><th>Gemeente</th><th>Niveau</th><th>Fase</th><th>Scan</th><th>Roadmap</th></tr>
+          <tr>
+            <td>Amsterdam</td>
+            <td><div class="level-bar"><div class="level-fill" style="width:75%"></div></div></td>
+            <td><span class="fase-chip" style="background:var(--teal-50);color:var(--teal-600)">Gevorderd</span></td>
+            <td><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/volwassenheid-roadmap/gemeente-amsterdam/scan.pdf" target="_blank" target="_blank">Scan ↗</a></td>
+            <td><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/volwassenheid-roadmap/gemeente-amsterdam/roadmap.pdf" target="_blank" target="_blank">Roadmap ↗</a></td>
+          </tr>
+          <tr>
+            <td>Rotterdam</td>
+            <td><div class="level-bar"><div class="level-fill" style="width:60%"></div></div></td>
+            <td><span class="fase-chip" style="background:var(--blue-50);color:var(--blue-600)">In ontwikkeling</span></td>
+            <td><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/volwassenheid-roadmap/gemeente-rotterdam/scan.pdf" target="_blank" target="_blank">Scan ↗</a></td>
+            <td><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/volwassenheid-roadmap/gemeente-rotterdam/roadmap.pdf" target="_blank" target="_blank">Roadmap ↗</a></td>
+          </tr>
+          <tr>
+            <td>Eindhoven</td>
+            <td><div class="level-bar"><div class="level-fill" style="width:45%"></div></div></td>
+            <td><span class="fase-chip" style="background:var(--blue-50);color:var(--blue-600)">In ontwikkeling</span></td>
+            <td><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/volwassenheid-roadmap/gemeente-eindhoven" target="_blank" target="_blank">Bekijk ↗</a></td>
+            <td><span class="tag-draft">Concept</span></td>
+          </tr>
+          <tr>
+            <td>Venlo</td>
+            <td><div class="level-bar"><div class="level-fill" style="width:20%"></div></div></td>
+            <td><span class="fase-chip" style="background:var(--amber-50);color:var(--amber-400)">Startend</span></td>
+            <td><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/volwassenheid-roadmap/gemeente-venlo" target="_blank" target="_blank">Bekijk ↗</a></td>
+            <td><span class="tag-draft">Concept</span></td>
+          </tr>
+        </table>
+        <a class="add-btn" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/volwassenheid-roadmap" target="_blank" target="_blank">+ Scan en roadmap van uw gemeente toevoegen ↗</a>
+      </div>
+    </div>
+
+    <div class="trans-panel" id="panel-spp">
+      <div class="trans-panel-header"><span>Strategische personeelsplanning (SPP)</span><a href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/strategische-spp" target="_blank" target="_blank" style="font-size:11px;color:var(--blue-600)">Alle documenten op GitHub ↗</a></div>
+      <div class="trans-panel-body">
+        <div class="beschouwing" style="margin-top:0"><div class="beschouwing-label">Werkgroep beschouwing</div>Zonder de juiste mensen loopt elk AI-programma stuk. SPP is het fundament: welke competenties heeft de gemeente nu, welke zijn nodig, en hoe overbruggen we het gat?</div>
+        <div class="doc-item"><div class="doc-icon">📊</div><a class="doc-name" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/strategische-spp/spp-analyse-template.xlsx" target="_blank" target="_blank">SPP-analyse template — AI-capaciteit en competenties</a><div class="doc-meta">Feb 2025</div><span class="tag-pub">Gepubliceerd</span></div>
+        <div class="doc-item"><div class="doc-icon">📄</div><a class="doc-name" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main/03_transformatie/strategische-spp/competentieprofielen-ai-functies.pdf" target="_blank" target="_blank">Competentieprofielen AI-functies gemeenten</a><div class="doc-meta">Jan 2025</div><span class="tag-draft">Concept</span></div>
+        <a class="add-btn" href="https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main/03_transformatie/strategische-spp" target="_blank" target="_blank">+ Document toevoegen op GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:var(--teal-400)"></div>Gepubliceerd (openbaar)</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--amber-400)"></div>Concept (ter beoordeling)</div>
+    <div class="leg"><div class="leg-dot" style="background:#ccc"></div>Leeg — input welkom</div>
+  </div>
+
+</div><!-- /kapstok -->
+
+<script>
+const REPO = 'https://github.com/eelcor/Strategie_Werkgroep_IMG';
+const TREE = 'https://github.com/eelcor/Strategie_Werkgroep_IMG/tree/main';
+const BLOB = 'https://github.com/eelcor/Strategie_Werkgroep_IMG/blob/main';
+
+const externData = [
+  {
+    duiding: 'AI raakt het vertrouwen van burgers in de overheid fundamenteel. Transparantie en uitlegbaarheid zijn randvoorwaarden, geen keuze.',
+    docs: [
+      { icon:'📄', naam:'WRR-rapport "Opgave AI" — relevante passages voor gemeenten', meta:'Jan 2025', status:'pub', href: BLOB+'/00_externe-invloeden/maatschappelijke-ontwikkelingen/2025-01_WRR_Opgave-AI-samenvatting.pdf' },
+      { icon:'📄', naam:'Publieksonderzoek AI-vertrouwen gemeenten (I&O Research)', meta:'Mrt 2025', status:'draft', href: BLOB+'/00_externe-invloeden/maatschappelijke-ontwikkelingen/2025-03_IO-Research_AI-vertrouwen-gemeenten.pdf' }
+    ],
+    map: TREE+'/00_externe-invloeden/maatschappelijke-ontwikkelingen'
+  },
+  {
+    duiding: 'De Nederlandse Digitaliseringsstrategie (NDS) en het coalitieakkoord bevatten concrete opdrachten voor overheden rond AI, digitale soevereiniteit en publieke waarden.',
+    docs: [
+      { icon:'📄', naam:'Nederlandse Digitaliseringsstrategie 2024 — gemeenterelevante passages', meta:'Nov 2024', status:'pub', href: BLOB+'/00_externe-invloeden/overheid-wetgeving/2024-11_Rijksoverheid_NDS-gemeenterelevante-passages.pdf' },
+      { icon:'📄', naam:'Coalitieakkoord 2024-2028 — AI en digitalisering passages', meta:'Dec 2024', status:'pub', href: BLOB+'/00_externe-invloeden/overheid-wetgeving/2024-12_Rijksoverheid_Coalitieakkoord-AI-passages.pdf' },
+      { icon:'📄', naam:'BZK-brief "Verantwoorde inzet AI bij overheid"', meta:'Feb 2025', status:'draft', href: BLOB+'/00_externe-invloeden/overheid-wetgeving/2025-02_BZK_Verantwoorde-inzet-AI.pdf' }
+    ],
+    map: TREE+'/00_externe-invloeden/overheid-wetgeving'
+  },
+  {
+    duiding: 'De VNG heeft een eigen AI-agenda die nauw samenhangt met het werk van deze werkgroep.',
+    docs: [],
+    map: TREE+'/00_externe-invloeden/vng-ontwikkelingen'
+  }
+];
+
+const themaData = [
+  {
+    beschouwing: 'Gemeenten zoeken houvast bij de implementatie van de AI-act. Een gemeenschappelijk toetsingskader — aansluitend op GEMMA en de BIG — is de prioriteit voor Q2 2026.',
+    bijdragen: [
+      { gemeente:'Amsterdam', tekst:'Intern AI-register opgezet conform AI-act bijlage III. Graag afstemming over definitie "hoog-risico" in gemeentelijke context.', status:'pub', href: TREE+'/01_beleid-strategie/governance-vangrails-ai-act/gemeente-amsterdam' },
+      { gemeente:'Eindhoven', tekst:'Concept toetsingskader bijgevoegd — gebaseerd op risicoanalyse en ethische toets.', status:'draft', href: TREE+'/01_beleid-strategie/governance-vangrails-ai-act/gemeente-eindhoven' }
+    ],
+    map: TREE+'/01_beleid-strategie/governance-vangrails-ai-act'
+  },
+  { beschouwing: 'Er is grote behoefte aan praktische richtlijnen voor GenAI-gebruik door ambtenaren. Wat mag wel, wat niet — en hoe borg je dat institutioneel?', bijdragen: [], map: TREE+'/01_beleid-strategie/richtlijnen-genai' },
+  { beschouwing: 'De referentiearchitectuur staat op de planning voor Q2 2026. Input van gemeenten is cruciaal om deze ook voor kleine gemeenten toepasbaar te maken.', bijdragen: [{ gemeente:'Rotterdam', tekst:'Architectuurschets AI-platform op Kubernetes + MLflow bijgevoegd.', status:'pub', href: TREE+'/01_beleid-strategie/algoritmen-architectuur/gemeente-rotterdam' }], map: TREE+'/01_beleid-strategie/algoritmen-architectuur' },
+  { beschouwing: 'Digitale soevereiniteit: welke data en systemen mogen bij commerciële partijen staan en wat moeten gemeenten zelf of gezamenlijk beheren?', bijdragen: [], map: TREE+'/01_beleid-strategie/digitale-soevereiniteit' },
+  { beschouwing: 'Naast de AI-act gelden AVG, ethische kaders, inkoopbeleid en sectorspecifieke regelgeving. Samenhang en prioritering zijn nog onduidelijk.', bijdragen: [], map: TREE+'/01_beleid-strategie/overige-kaders' }
+];
+
+function renderTag(status, href) {
+  if (status === 'pub') return href ? `<a class="tag-pub" href="${href}" target="_blank">Gepubliceerd ↗</a>` : `<span class="tag-pub">Gepubliceerd</span>`;
+  return `<span class="tag-draft">Concept</span>`;
+}
+
+function renderExternContent(d) {
+  const docsHtml = d.docs.length
+    ? d.docs.map(doc => `<div class="doc-item"><div class="doc-icon">${doc.icon}</div><a class="doc-name" href="${doc.href}" target="_blank">${doc.naam}</a><div class="doc-meta">${doc.meta}</div>${renderTag(doc.status, null)}</div>`).join('')
+    : '<div class="empty">Nog geen documenten — voeg het eerste toe</div>';
+  return `<div class="beschouwing extern-beschouwing"><div class="beschouwing-label">Werkgroep duiding</div>${d.duiding}</div>${docsHtml}<a class="add-btn" href="${d.map}" target="_blank">+ Document toevoegen via GitHub ↗</a>`;
+}
+
+function selectExtern(idx, el) {
+  document.querySelectorAll('.extern-col').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('extern-content').innerHTML = renderExternContent(externData[idx]);
+}
+
+function renderStratContent(d) {
+  const bijdragenHtml = d.bijdragen.length
+    ? d.bijdragen.map(b => `<div class="bijdrage"><span class="gem-badge">${b.gemeente}</span><div class="bijdrage-text">${b.tekst}</div>${renderTag(b.status, b.href)}</div>`).join('')
+    : '<div class="empty">Nog geen bijdragen — wees de eerste gemeente</div>';
+  return `<div class="beschouwing"><div class="beschouwing-label">Werkgroep beschouwing</div>${d.beschouwing}</div>${bijdragenHtml}<a class="add-btn" href="${d.map}" target="_blank">+ Bijdrage leveren als gemeente — naar GitHub ↗</a>`;
+}
+
+function selectThema(idx, el) {
+  document.querySelectorAll('.thema-col').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('strat-content').innerHTML = renderStratContent(themaData[idx]);
+}
+
+function toggleLaag(id) {
+  document.getElementById('laag-'+id).classList.toggle('open');
+}
+
+let activePanel = null;
+function toggleTrans(id) {
+  const panel = document.getElementById('panel-'+id);
+  const chip = document.getElementById('chip-'+id);
+  if (activePanel && activePanel !== id) {
+    document.getElementById('panel-'+activePanel).classList.remove('active');
+    document.getElementById('chip-'+activePanel).classList.remove('active');
+  }
+  const isOpen = panel.classList.toggle('active');
+  chip.classList.toggle('active', isOpen);
+  activePanel = isOpen ? id : null;
+}
+
+// Init
+selectExtern(0, document.querySelector('.extern-col'));
+selectThema(0, document.querySelector('.thema-col'));
+</script>
+</body>
+</html>
